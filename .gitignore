@@ -1,0 +1,30 @@
+# Build & Runtime Files
+bin/
+obj/
+.publish/
+
+# User-Specific & IDE Configs
+.vscode/
+.idea/
+*.suo
+*.user
+*.vs/
+
+# Dependency Management
+packages/
+node_modules/
+*.dll
+
+# Secrets & Environment Configs
+.env
+appsettings.Development.json
+appsettings.json
+secrets.json
+
+# Logs & Temporary Files
+*.log
+*.tmp
+*.bak
+
+# Generated Files
+*.Generated.cs
