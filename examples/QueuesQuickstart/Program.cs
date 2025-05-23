@@ -1,21 +1,45 @@
-﻿using Azure;
-using Azure.Identity;
+﻿using Azure.Identity;
 using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
-using System;
-using System.Threading.Tasks;
 
 Console.WriteLine("Azure Queue Storage client library - .NET quickstart sample");
 
-// Create a unique name for the queue
-// TODO: Replace the <storage-account-name> placeholder 
 string queueName = "quickstartqueues-" + Guid.NewGuid().ToString();
 string storageAccountName = "stdevidentitymigration";
 
-// Instantiate a QueueClient to create and interact with the queue
-QueueClient queueClient = new QueueClient(
-    new Uri($"https://{storageAccountName}.queue.core.windows.net/{queueName}"),
-    new DefaultAzureCredential());
+Console.Write("Enter 1 (Passwordless) or 2 (Connection String): ");
+string? input = Console.ReadLine();
+
+QueueClient? queueClient = null;
+
+if (input == "1")
+{
+    // Instantiate a QueueClient to create and interact with the queue
+    queueClient = new QueueClient(
+        new Uri($"https://{storageAccountName}.queue.core.windows.net/{queueName}"),
+        new DefaultAzureCredential());
+}
+else if (input == "2")
+{
+    // Retrieve the connection string for use with the application. The storage
+    // connection string is stored in an environment variable called
+    // AZURE_STORAGE_CONNECTION_STRING on the machine running the application.
+    // If the environment variable is created after the application is launched
+    // in a console or with Visual Studio, the shell or application needs to be
+    // closed and reloaded to take the environment variable into account.
+    string? connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        Console.WriteLine("AZURE_STORAGE_CONNECTION_STRING environment variable is not set.");
+        return;
+    }
+    queueClient = new QueueClient(connectionString, queueName);
+}
+else
+{
+    Console.WriteLine("Invalid input. Please enter 1 or 2.");
+    return;
+}
 
 Console.WriteLine($"Creating queue: {queueName}");
 
